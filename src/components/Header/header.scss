@@ -1,9 +1,18 @@
 .header{
+  a{
+    text-decoration: none;
+  }
+
   &__nav{
     background-color: rgb(126, 126, 216);
   }
   &__title{
     color: rgb(253, 253, 253);
+    
+    &:hover{
+      color: rgb(10, 243, 185);
+      transition: all 0.5s ease-in-out;
+    }
   }
 }
 

@@ -10,7 +10,7 @@ function HomePage() {
     <div className='homepage'>
       <Container className='text-center'>
         <h3>Welcome!</h3>
-        <p>U must login firstly before use website</p>
+        <p>U must login first before using website</p>
         <div className='homepage__btn-container'>
           <NavLink exact to='/login' className='btn btn-primary mr-1'>Login</NavLink>
           <NavLink exact to='/register' className='btn btn-success ml-1'>Register</NavLink>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Container, FormGroup, Form, Label, Input, Row, Col } from 'reactstrap';
 import { useForm } from 'react-hook-form';
+import { useHistory, NavLink } from 'react-router-dom';
 import { signUp } from '../../services/auth.service';
 import './registerPage.scss';
-import { useHistory } from 'react-router-dom';
 
 RegisterPage.propTypes = {};
 
@@ -175,6 +175,9 @@ function RegisterPage() {
               </Col>
             </Row>
           </Form>
+          <NavLink exact to='/login'>
+            <p>Already have account? Login!</p>
+          </NavLink>
         </Col>
       </Row>
     </Container>
