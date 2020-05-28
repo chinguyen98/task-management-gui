@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import './homepage.scss';
+import { NavLink } from 'react-router-dom';
 
 HomePage.propTypes = {}
 
@@ -11,8 +12,8 @@ function HomePage() {
         <h3>Welcome!</h3>
         <p>U must login firstly before use website</p>
         <div className='homepage__btn-container'>
-          <button className='btn btn-success mr-1'>Login</button>
-          <button className='btn btn-primary ml-1'>Register</button>
+          <NavLink exact to='/login' className='btn btn-primary mr-1'>Login</NavLink>
+          <NavLink exact to='/register' className='btn btn-success ml-1'>Register</NavLink>
         </div>
       </Container>
     </div>
