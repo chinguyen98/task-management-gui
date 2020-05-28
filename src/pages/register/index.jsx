@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, FormGroup, Form, Label, Input, Row, Col } from 'reactstrap';
 import { useForm } from 'react-hook-form';
+import { signUp } from '../../services/auth.service';
 import './registerPage.scss';
+import { useHistory } from 'react-router-dom';
 
 RegisterPage.propTypes = {};
 
 function RegisterPage() {
+  const [errorMsg, setErrorMsg] = useState(null);
   const { handleSubmit, register, errors, setError, clearError, watch } = useForm();
+  const history = useHistory();
 
-  const registerUser = (data) => {
+  const registerUser = async (data) => {
     if (checkUserName() && checkPassword() && checkConfirmPassword()) {
-      console.log('Can submit!');
-    }else{
+      delete data.confirmPassword;
+      try {
+        await signUp(data);
+        history.push('/login');
+      } catch (err) {
+        const errMessage = err.response.data.message;
+        setErrorMsg(errMessage);
+      }
+    } else {
       console.log('ERROR!');
     }
   }
@@ -74,6 +85,14 @@ function RegisterPage() {
       <h3>Register</h3>
       <Row className='justify-content-center'>
         <Col sm={10} md={7}>
+          {
+            errorMsg !== null
+            && <div className="alert alert-danger">
+              {
+                errorMsg
+              }
+            </div>
+          }
           <Form onSubmit={handleSubmit(registerUser)}>
             <FormGroup>
               <Label for='username'>Username</Label>
