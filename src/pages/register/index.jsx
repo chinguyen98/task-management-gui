@@ -17,7 +17,9 @@ function RegisterPage() {
       delete data.confirmPassword;
       try {
         await signUp(data);
-        history.push('/login');
+        history.push('/login', {
+          flashMessage: { type: 'success', message: 'Register successfully' },
+        });
       } catch (err) {
         const errMessage = err.response.data.message;
         setErrorMsg(errMessage);

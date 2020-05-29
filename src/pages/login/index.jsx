@@ -1,15 +1,34 @@
-import React from 'react';
-import LoginForm from '../../components/LoginForm';
+import React, { useState } from 'react';
+import { Container } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import FlashMessage from '../../components/FlashMessage';
 
 LoginPage.propTypes = {}
 
-function LoginPage() {
+function LoginPage({ location, history }) {
+  let redirectFlashMessage = {};
+  const { pathname, search, state } = location;
+
+  if (state && state.flashMessage) {
+    redirectFlashMessage = state.flashMessage;
+
+    const clonedState = { ...state };
+    delete clonedState.flashMessage;
+    history.replace({ pathname, search, state: clonedState })
+  }
+
+  const [flashMessage, setFlashMessage] = useState(redirectFlashMessage);
+
   return (
-    <div className='Login'>
+    <Container className='Login'>
       <h1>Login Page</h1>
-      <LoginForm></LoginForm>
-    </div>
+      <FlashMessage
+        message={flashMessage.message}
+        type={flashMessage.type}
+        close={() => { setFlashMessage({}) }}
+      />
+    </Container>
   )
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);
