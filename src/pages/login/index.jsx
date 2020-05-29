@@ -3,6 +3,7 @@ import { Container, FormGroup, Form, Label, Input, Row, Col } from 'reactstrap';
 import { withRouter, NavLink } from 'react-router-dom';
 import FlashMessage from '../../components/FlashMessage';
 import { useForm } from 'react-hook-form';
+import { signIn } from '../../services/auth.service';
 
 LoginPage.propTypes = {}
 
@@ -22,7 +23,17 @@ function LoginPage({ location, history }) {
   const { handleSubmit, register, errors } = useForm();
 
   const login = async (data) => {
-    console.log(data);
+    try {
+      const token = await signIn(data);
+      localStorage.setItem('token', token);
+    } catch (err) {
+      const errMessage = err.response.data.message;
+      setFlashMessage({
+        ...flashMessage,
+        message: errMessage,
+        type: 'danger',
+      })
+    }
   }
 
   return (
