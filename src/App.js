@@ -4,6 +4,7 @@ import Header from './components/Header';
 import HomePage from './pages/home';
 import RegisterPage from './pages/register';
 import LoginPage from './pages/login';
+import Task from './pages/task';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route exact path='/' component={HomePage} />
           <Route exact path='/register' component={RegisterPage} />
           <Route exact path='/login' component={LoginPage} />
+          <Route path='/tasks' component={Task}></Route>
         </Switch>
       </BrowserRouter>
     </div>
