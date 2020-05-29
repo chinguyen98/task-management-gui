@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Container, FormGroup, Form, Label, Input, Row, Col } from 'reactstrap';
 import { useForm } from 'react-hook-form';
-import { useHistory, NavLink } from 'react-router-dom';
-import { signUp } from '../../services/auth.service';
+import { useHistory, NavLink, Redirect } from 'react-router-dom';
+import { signUp, decodeToken } from '../../services/auth.service';
 import './registerPage.scss';
 
 RegisterPage.propTypes = {};
@@ -83,106 +83,113 @@ function RegisterPage() {
   }
 
   return (
-    <Container className='registerPage mt-5'>
-      <h3>Register</h3>
-      <Row className='justify-content-center'>
-        <Col sm={10} md={7}>
-          {
-            errorMsg !== null
-            && <div className="alert alert-danger">
-              {
-                errorMsg
-              }
-            </div>
-          }
-          <Form onSubmit={handleSubmit(registerUser)}>
-            <FormGroup>
-              <Label for='username'>Username</Label>
-              <Input
-                type='text'
-                name='username'
-                id='username'
-                placeholder='Ex: nguyendacchi123'
-                className='mb-3'
+    <>
+      {
+        decodeToken() ?
+          <Redirect to='/tasks'></Redirect>
+          :
+          <Container className='registerPage mt-5'>
+            <h3>Register</h3>
+            <Row className='justify-content-center'>
+              <Col sm={10} md={7}>
+                {
+                  errorMsg !== null
+                  && <div className="alert alert-danger">
+                    {
+                      errorMsg
+                    }
+                  </div>
+                }
+                <Form onSubmit={handleSubmit(registerUser)}>
+                  <FormGroup>
+                    <Label for='username'>Username</Label>
+                    <Input
+                      type='text'
+                      name='username'
+                      id='username'
+                      placeholder='Ex: nguyendacchi123'
+                      className='mb-3'
 
-                onInput={checkUserName}
-                innerRef={register}
-              />
-              {
-                errors.username?.type === 'required'
-                && <div className="alert alert-danger">
-                  Username field is required!
+                      onInput={checkUserName}
+                      innerRef={register}
+                    />
+                    {
+                      errors.username?.type === 'required'
+                      && <div className="alert alert-danger">
+                        Username field is required!
                   </div>
-              }
-              {
-                errors.username?.type === 'minLength'
-                && <div className="alert alert-danger">
-                  Your username field length must equal or longer than 5!
+                    }
+                    {
+                      errors.username?.type === 'minLength'
+                      && <div className="alert alert-danger">
+                        Your username field length must equal or longer than 5!
                   </div>
-              }
-            </FormGroup>
-            <FormGroup>
-              <Label for='password'>Password</Label>
-              <Input
-                type='password'
-                name='password'
-                id='password'
-                className='mb-3'
-                onInput={checkPassword}
+                    }
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for='password'>Password</Label>
+                    <Input
+                      type='password'
+                      name='password'
+                      id='password'
+                      className='mb-3'
+                      onInput={checkPassword}
 
-                innerRef={register}
-              />
-              {
-                errors.password?.type === 'required'
-                && <div className="alert alert-danger">
-                  Password field is required!
+                      innerRef={register}
+                    />
+                    {
+                      errors.password?.type === 'required'
+                      && <div className="alert alert-danger">
+                        Password field is required!
                   </div>
-              }
-              {
-                errors.password?.type === 'minLength'
-                && <div className="alert alert-danger">
-                  Your password field length must equal or longer than 8!
+                    }
+                    {
+                      errors.password?.type === 'minLength'
+                      && <div className="alert alert-danger">
+                        Your password field length must equal or longer than 8!
                   </div>
-              }
-              {
-                errors.password?.type === 'weakPassword'
-                && <div className="alert alert-danger">
-                  Password too weak!
+                    }
+                    {
+                      errors.password?.type === 'weakPassword'
+                      && <div className="alert alert-danger">
+                        Password too weak!
                   </div>
-              }
-            </FormGroup>
-            <FormGroup>
-              <Label for='confirmPassword'>Confirm Password</Label>
-              <Input
-                type='password'
-                name='confirmPassword'
-                id='confirmPassword'
-                className='mb-3'
-                onInput={checkConfirmPassword}
+                    }
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for='confirmPassword'>Confirm Password</Label>
+                    <Input
+                      type='password'
+                      name='confirmPassword'
+                      id='confirmPassword'
+                      className='mb-3'
+                      onInput={checkConfirmPassword}
 
-                innerRef={register}
-              />
-              {
-                errors.confirmPassword?.type === 'notMatchPassword'
-                && <div className="alert alert-danger">
-                  Confirm password not match!
+                      innerRef={register}
+                    />
+                    {
+                      errors.confirmPassword?.type === 'notMatchPassword'
+                      && <div className="alert alert-danger">
+                        Confirm password not match!
                   </div>
-              }
-            </FormGroup>
-            <Row>
-              <Col xl={3} md={4} xs={4}>
-                <FormGroup>
-                  <Input className='btn btn-success' type='submit' value='Register' />
-                </FormGroup>
+                    }
+                  </FormGroup>
+                  <Row>
+                    <Col xl={3} md={4} xs={4}>
+                      <FormGroup>
+                        <Input className='btn btn-success' type='submit' value='Register' />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </Form>
+                <NavLink exact to='/login'>
+                  <p>Already have account? Login!</p>
+                </NavLink>
               </Col>
             </Row>
-          </Form>
-          <NavLink exact to='/login'>
-            <p>Already have account? Login!</p>
-          </NavLink>
-        </Col>
-      </Row>
-    </Container>
+          </Container>
+      }
+    </>
   )
 }
 

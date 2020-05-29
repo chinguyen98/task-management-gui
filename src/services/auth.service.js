@@ -1,11 +1,22 @@
 import { post } from 'axios';
 import { BACKEND_URL } from './http.service';
+import * as jwt from 'jsonwebtoken';
 
 export async function signUp(data) {
   await post(`${BACKEND_URL}/auth/signup`, data);
 }
 
 export async function signIn(data) {
-  const respose= await post(`${BACKEND_URL}/auth/signin`, data);
+  const respose = await post(`${BACKEND_URL}/auth/signin`, data);
   return respose.data.accessToken;
+}
+
+export function decodeToken() {
+  try {
+    const token = localStorage.getItem('token');
+    const value = jwt.verify(token, 'JSisAwesome');
+    return value;
+  } catch (err) {
+    return null;
+  }
 }
