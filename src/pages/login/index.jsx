@@ -29,10 +29,10 @@ function LoginPage({ location, history: historyProp }) {
     try {
       const token = await signIn(data);
       localStorage.setItem('token', token);
-      setUser(decodeToken());
       history.push('/tasks', {
         flashMessage: { type: 'success', message: 'Login successfully. Enjoy!' },
       });
+      setUser(decodeToken());
     } catch (err) {
       const errMessage = err.response.data.message;
       setFlashMessage({
