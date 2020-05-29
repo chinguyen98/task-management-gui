@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Container, FormGroup, Form, Label, Input, Row, Col } from 'reactstrap';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter, NavLink, useHistory } from 'react-router-dom';
 import FlashMessage from '../../components/FlashMessage';
 import { useForm } from 'react-hook-form';
 import { signIn } from '../../services/auth.service';
 
 LoginPage.propTypes = {}
 
-function LoginPage({ location, history }) {
+function LoginPage({ location, history: historyProp }) {
   let redirectFlashMessage = {};
   const { pathname, search, state } = location;
+  const history = useHistory();
 
   if (state && state.flashMessage) {
     redirectFlashMessage = state.flashMessage;
 
     const clonedState = { ...state };
     delete clonedState.flashMessage;
-    history.replace({ pathname, search, state: clonedState })
+    historyProp.replace({ pathname, search, state: clonedState });
   }
 
   const [flashMessage, setFlashMessage] = useState(redirectFlashMessage);
@@ -26,6 +27,9 @@ function LoginPage({ location, history }) {
     try {
       const token = await signIn(data);
       localStorage.setItem('token', token);
+      history.push('/tasks', {
+        flashMessage: { type: 'success', message: 'Login successfully. Enjoy!' },
+      });
     } catch (err) {
       const errMessage = err.response.data.message;
       setFlashMessage({
