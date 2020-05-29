@@ -3,14 +3,14 @@ import { decodeToken } from '../services/auth.service';
 
 export const UserContext = createContext();
 
-function UserContextProvider({children}) {
+function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     setUser(decodeToken());
   }, [])
 
-  const contextValue={
+  const contextValue = {
     user,
     setUser,
   }

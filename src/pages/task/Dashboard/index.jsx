@@ -1,7 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import React, { useState, useContext, useEffect } from 'react';
+import { Container, Row, Col, Alert } from 'reactstrap';
 import FlashMessage from '../../../components/FlashMessage';
 import { UserContext } from '../../../contexts/userContext';
+import { TaskContext } from '../../../contexts/taskContext';
+import { getTasks } from '../../../services/auth.service';
 
 function TaskDashBoardPage({ location, history }) {
   let redirectFlashMessage = {};
@@ -17,6 +19,30 @@ function TaskDashBoardPage({ location, history }) {
 
   const [flashMessage, setFlashMessage] = useState(redirectFlashMessage);
   const { user } = useContext(UserContext);
+  const { tasks, setTasks } = useContext(TaskContext);
+
+  const renderTasks = (tasks) => {
+    return (
+      <div>
+        {
+          tasks.map((task) => (
+            <h1>{task.title}</h1>
+          ))
+        }
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    try {
+      getTasks().then(data => {
+        console.log(data)
+        setTasks([...data]);
+      });
+    } catch (err) {
+      console.log('error!!!!!!!!!')
+    }
+  }, [setTasks])
 
   return (
     <Container>
@@ -31,6 +57,12 @@ function TaskDashBoardPage({ location, history }) {
             type={flashMessage.type}
             close={() => { setFlashMessage({}) }}
           />
+          {
+            tasks.length === 0 && <Alert className='my-5 text-center' color='danger'>Tasks not found!</Alert>
+          }
+          {
+            tasks.length !== 0 && renderTasks(tasks)
+          }
         </Col>
       </Row>
     </Container>

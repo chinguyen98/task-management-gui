@@ -1,4 +1,4 @@
-import { post } from 'axios';
+import axios, { post } from 'axios';
 import { BACKEND_URL } from './http.service';
 import * as jwt from 'jsonwebtoken';
 
@@ -11,6 +11,11 @@ export async function signIn(data) {
   return respose.data.accessToken;
 }
 
+export async function getTasks() {
+  const respose = await axios.get(`${BACKEND_URL}/tasks`, createBearerToken());
+  return respose.data;
+}
+
 export function decodeToken() {
   try {
     const token = localStorage.getItem('token');
@@ -19,4 +24,12 @@ export function decodeToken() {
   } catch (err) {
     return null;
   }
+}
+
+export function createBearerToken() {
+  const token = localStorage.getItem('token');
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return config;
 }
