@@ -3,8 +3,8 @@ import { Container, Row, Col, Alert } from 'reactstrap';
 import FlashMessage from '../../../components/FlashMessage';
 import { UserContext } from '../../../contexts/userContext';
 import { TaskContext } from '../../../contexts/taskContext';
-import { getTasks } from '../../../services/auth.service';
 import TaskItem from '../../../components/TaskItem';
+import { getTasks } from '../../../services/task.service';
 
 function TaskDashBoardPage({ location, history }) {
   let redirectFlashMessage = {};
