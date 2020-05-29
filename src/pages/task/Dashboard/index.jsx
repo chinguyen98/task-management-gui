@@ -4,6 +4,7 @@ import FlashMessage from '../../../components/FlashMessage';
 import { UserContext } from '../../../contexts/userContext';
 import { TaskContext } from '../../../contexts/taskContext';
 import { getTasks } from '../../../services/auth.service';
+import TaskItem from '../../../components/TaskItem';
 
 function TaskDashBoardPage({ location, history }) {
   let redirectFlashMessage = {};
@@ -24,9 +25,10 @@ function TaskDashBoardPage({ location, history }) {
   const renderTasks = (tasks) => {
     return (
       <div>
+        <Alert color='primary'>U have {tasks.length} tasks</Alert>
         {
           tasks.map((task) => (
-            <h1>{task.title}</h1>
+            <TaskItem task={task}></TaskItem>
           ))
         }
       </div>
