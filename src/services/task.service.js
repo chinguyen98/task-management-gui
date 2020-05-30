@@ -11,3 +11,7 @@ export async function updateTaskStatusToDone(id) {
   const respose = await axios.patch(`${BACKEND_URL}/tasks/${id}/status`, { status: 'DONE' }, createBearerToken());
   return respose.data;
 }
+
+export async function createTask(data) {
+  await axios.post(`${BACKEND_URL}/tasks`, data, createBearerToken());
+}

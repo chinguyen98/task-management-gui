@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Container, Row, Col, Alert } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 import FlashMessage from '../../../components/FlashMessage';
 import { UserContext } from '../../../contexts/userContext';
 import { TaskContext } from '../../../contexts/taskContext';
@@ -23,14 +24,30 @@ function TaskDashBoardPage({ location, history }) {
   const { tasks, setTasks } = useContext(TaskContext);
 
   const renderTasks = (tasks) => {
+    const doneTask = tasks.filter(task => task.status === 'DONE');
+    const unDoneTask = tasks.filter(task => task.status === 'OPEN');
+
     return (
       <div>
-        <Alert color='primary'>U have {tasks.length} tasks</Alert>
-        {
-          tasks.map((task) => (
-            <TaskItem task={task}></TaskItem>
-          ))
-        }
+        <Row className='d-flex'>
+          <Col md={9} >
+            <Alert color='primary'>U have {tasks.length} tasks ({doneTask.length} done and {unDoneTask.length} undone)</Alert>
+          </Col>
+          <Col md={3}>
+            <div>
+              <NavLink className='btn btn-primary mt-1' to='/tasks/createTask'>
+                Create task
+              </NavLink>
+            </div>
+          </Col>
+        </Row>
+        <div className='mt-2'>
+          {
+            tasks.map((task) => (
+              <TaskItem key={task.id} task={task}></TaskItem>
+            ))
+          }
+        </div>
       </div>
     )
   }
@@ -38,7 +55,6 @@ function TaskDashBoardPage({ location, history }) {
   useEffect(() => {
     try {
       getTasks().then(data => {
-        console.log(data)
         setTasks([...data]);
       });
     } catch (err) {
