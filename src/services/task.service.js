@@ -15,3 +15,7 @@ export async function updateTaskStatusToDone(id) {
 export async function createTask(data) {
   await axios.post(`${BACKEND_URL}/tasks`, data, createBearerToken());
 }
+
+export async function deleteTask(id) {
+  await axios.delete(`${BACKEND_URL}/tasks/${id}`, createBearerToken());
+}

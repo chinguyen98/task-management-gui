@@ -76,7 +76,13 @@ function TaskDashBoardPage({ location, history }) {
             close={() => { setFlashMessage({}) }}
           />
           {
-            tasks.length === 0 && <Alert className='my-5 text-center' color='danger'>Tasks not found!</Alert>
+            tasks.length === 0
+            && <div className='text-center'>
+              <Alert className='mt-5 mb-1 text-center' color='danger'>Tasks not found!</Alert>
+              <NavLink className='btn btn-primary mt-1' to='/tasks/createTask'>
+                Create new task
+              </NavLink>
+            </div>
           }
           {
             tasks.length !== 0 && renderTasks(tasks)
