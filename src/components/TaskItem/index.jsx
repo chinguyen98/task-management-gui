@@ -34,7 +34,7 @@ function TaskItem({ task }) {
       <div className='taskItem__title'>{task.title}</div>
       <div className='taskItem__description'>{task.description}</div>
       <Row>
-        <Col md={3}>
+        <Col md={3} xs={4}>
           {
             task.status === 'OPEN' && <button onClick={() => { updateStatus(task.id) }} className='mt-3 btn btn-secondary'>{task.status}</button>
           }
@@ -42,9 +42,9 @@ function TaskItem({ task }) {
             task.status === 'DONE' && <div className='mt-3'>{task.status}</div>
           }
         </Col>
-        <Col md={6}></Col>
-        <Col className='text-center d-flex justify-content-end' md={3}>
-          <button color='danger' onClick={() => { handleDeleteTask(task.id) }} className='mt-3 btn btn-danger'>Delete</button>
+        <Col md={6} xs={4}></Col>
+        <Col className='text-center d-flex justify-content-end' md={3} xs={4}>
+          <button color='danger' onClick={() => { handleDeleteTask(task.id) }} className='mt-md-3 mt-sm-0 btn btn-danger'>Delete</button>
         </Col>
       </Row>
     </div>

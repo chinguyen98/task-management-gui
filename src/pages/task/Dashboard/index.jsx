@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Container, Row, Col, Alert } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import FlashMessage from '../../../components/FlashMessage';
@@ -6,6 +6,7 @@ import { UserContext } from '../../../contexts/userContext';
 import { TaskContext } from '../../../contexts/taskContext';
 import TaskItem from '../../../components/TaskItem';
 import { getTasks } from '../../../services/task.service';
+import SearchBar from '../../../components/SearchBar';
 
 function TaskDashBoardPage({ location, history }) {
   let redirectFlashMessage = {};
@@ -22,6 +23,44 @@ function TaskDashBoardPage({ location, history }) {
   const [flashMessage, setFlashMessage] = useState(redirectFlashMessage);
   const { user } = useContext(UserContext);
   const { tasks, setTasks } = useContext(TaskContext);
+  const [searchText, setSearchText] = useState('');
+  const [mode, setMode] = useState('SHOW')//SHOW & SEARCH
+  const [status, setStatus] = useState('ALL');
+  const typingRef = useRef(null);
+
+  const handleSearch = async () => {
+    try {
+      const data = await getTasks(searchText, status);
+      if (data.length === 0) {
+        setMode('SEARCH');
+      }
+      else {
+        setMode('SHOW');
+      }
+      setTasks(data);
+    } catch (err) {
+      console.log('search err');
+    }
+  }
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchText, status])
+
+  const handleTyping = (e) => {
+    const typingSearch = e.target.value;
+    if (typingRef.current) {
+      clearTimeout(typingRef.current);
+    }
+
+    typingRef.current = setTimeout(() => {
+      setSearchText(typingSearch.toLowerCase());
+    }, 300);
+  }
+
+  const handleChangeStatus = (e) => {
+    setStatus(e.target.value);
+  }
 
   const renderTasks = (tasks) => {
     const doneTask = tasks.filter(task => task.status === 'DONE');
@@ -41,6 +80,11 @@ function TaskDashBoardPage({ location, history }) {
             </div>
           </Col>
         </Row>
+        <SearchBar
+          handleChangeStatus={handleChangeStatus}
+          handleTyping={handleTyping}
+          status={status}
+        />
         <div className='mt-2'>
           {
             tasks.map((task) => (
@@ -76,7 +120,7 @@ function TaskDashBoardPage({ location, history }) {
             close={() => { setFlashMessage({}) }}
           />
           {
-            tasks.length === 0
+            (tasks.length === 0 && mode === 'SHOW')
             && <div className='text-center'>
               <Alert className='mt-5 mb-1 text-center' color='danger'>Tasks not found!</Alert>
               <NavLink className='btn btn-primary mt-1' to='/tasks/createTask'>
@@ -85,7 +129,23 @@ function TaskDashBoardPage({ location, history }) {
             </div>
           }
           {
-            tasks.length !== 0 && renderTasks(tasks)
+            (tasks.length === 0 && mode === 'SEARCH')
+            && <div>
+              <div>
+                <NavLink className='btn btn-primary mt-1 mb-3' to='/tasks/createTask'>
+                  Create task
+              </NavLink>
+              </div>
+              <SearchBar
+                handleChangeStatus={handleChangeStatus}
+                handleTyping={handleTyping}
+                status={status}
+              />
+              <Alert className='mt-1 mb-3 text-center' color='danger'>Tasks not found!</Alert>
+            </div>
+          }
+          {
+            (tasks.length !== 0 && mode === 'SHOW') && renderTasks(tasks)
           }
         </Col>
       </Row>
